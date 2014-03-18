@@ -16,10 +16,17 @@ public class SwipeDetect implements View.OnTouchListener {
         None, // when no action was detected
         Click
     }
-
     private static final int MIN_DISTANCE = 100;
     private float downX, downY, upX, upY;
     private Action mSwipeDetected = Action.None;
+    OnSwipeListener onSwipeListener;
+    public SwipeDetect(){};
+
+    public SwipeDetect(OnSwipeListener onSwipeListener)
+    {
+        this.onSwipeListener = onSwipeListener;
+    }
+
 
     public boolean swipeDetected() {
         return mSwipeDetected != Action.None;
@@ -50,12 +57,12 @@ public class SwipeDetect implements View.OnTouchListener {
                 if (Math.abs(deltaX) > MIN_DISTANCE) {
                     // left or right
                     if (deltaX < 0) {
-
+                        Log.i("Room", "Swipe Left to Right");
                         mSwipeDetected = Action.LR;
                         return false;
                     }
                     if (deltaX > 0) {
-
+                        Log.i("Room", "Swipe Right to Left");
                         mSwipeDetected = Action.RL;
                         return false;
                     }
@@ -64,11 +71,13 @@ public class SwipeDetect implements View.OnTouchListener {
                     if (deltaY < 0) {
                         Log.i("Room", "Swipe Top to Bottom");
                         mSwipeDetected = Action.TB;
+                        onSwipeListener.callback("Down");
                         return false;
                     }
                     if (deltaY > 0) {
                         Log.i("Room", "Swipe Bottom to Top");
                         mSwipeDetected = Action.BT;
+                        onSwipeListener.callback("Up");
                         return false;
                     }
                 }
@@ -77,5 +86,9 @@ public class SwipeDetect implements View.OnTouchListener {
             }
         }
         return false;
+    }
+    //call back to change text floor color
+    public interface OnSwipeListener {
+        public void callback(String swipe);
     }
 }

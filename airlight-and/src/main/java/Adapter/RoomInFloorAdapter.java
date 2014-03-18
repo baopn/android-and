@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.ViewGroup;
@@ -13,7 +14,7 @@ import vn.siliconstraits.airlight.FloorFragment;
 import java.lang.reflect.Field;
 import java.util.List;
 
-public class RoomInFloorAdapter extends FragmentPagerAdapter {
+public class RoomInFloorAdapter extends FragmentStatePagerAdapter {
 
     List<Fragment> fragments;
     String[] rooms;
@@ -74,7 +75,7 @@ public class RoomInFloorAdapter extends FragmentPagerAdapter {
         }
         return fragment;
     }
-    public void changeFloor(int floor, List<Fragment> fragments, String[] rooms)
+    public void changeFloor(int floor, List<Fragment> fragments,String[] rooms)
     {
         this.floor = floor;
         this.fragments = fragments;
