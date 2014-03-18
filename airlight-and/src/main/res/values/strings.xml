@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Airlight</string>
+    <string name="title_launch">Air light</string>
+    <string name="action_settings">Settings</string>
+    <string name="text_launch">
+        Before continue using this application, please obtain a valid settings file by emailing us at
+    </string>
+    <string name="text_contact">contact@siliconstraits.vn</string>
+    <string name="url_launch" >URL to settings</string>
+    <string name="run_launch">Save &amp; Continue</string>
+    <string name="demo_launch">Use Demo</string>
+    <string name="footer_launch">A product of Silicon Straits Saigon</string>
+    <string name="url_wrong">URL is wrong</string>
+
+    <array name="list_image">
+
+        <item name="round_on">@drawable/light_round_on</item>
+        <item name="round_off">@drawable/light_round_off</item>
+
+        <item name="square_on">@drawable/light_square_on</item>
+        <item name="square_off">@drawable/light_square_off</item>
+
+        <item name="straight_on">@drawable/light_straight_on</item>
+        <item name="straight_off">@drawable/light_straight_off</item>
+
+        <item name="round_on_blue">@drawable/light_round_on_blue</item>
+        <item name="round_off_blue">@drawable/light_round_off_blue</item>
+
+        <item name="square_on_blue">@drawable/light_square_on_blue</item>
+        <item name="square_off_blue">@drawable/light_square_off_blue</item>
+
+        <item name="straight_on_blue">@drawable/light_straight_on_blue</item>
+        <item name="straight_off_blue">@drawable/light_straight_off_blue</item>
+
+        <item name="back_ground">@drawable/light_background</item>
+    </array>
+
+</resources>
