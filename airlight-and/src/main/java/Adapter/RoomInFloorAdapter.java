@@ -9,8 +9,6 @@ import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.ViewGroup;
 import vn.siliconstraits.airlight.FloorFragment;
-
-
 import java.lang.reflect.Field;
 import java.util.List;
 

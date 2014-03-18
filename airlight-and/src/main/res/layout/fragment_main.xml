@@ -10,7 +10,8 @@
             android:id="@+id/vpager"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_alignParentTop="true" android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"/>
     <com.viewpagerindicator.TitlePageIndicator
             android:id="@+id/titleIndicator"
@@ -27,7 +28,6 @@
             style="?android:attr/borderlessButtonStyle"
             android:src="@drawable/setting"
             android:layout_alignParentTop="true"
-            android:layout_below="@+id/pagerRoom"
             android:layout_alignParentRight="true"
             android:layout_alignParentEnd="true"/>
 

@@ -2,8 +2,11 @@ package vn.siliconstraits.airlight;
 
 import Adapter.RoomInFloorAdapter;
 import Adapter.SwipeDetect;
+import android.app.Dialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.ViewPager;
@@ -13,7 +16,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.viewpagerindicator.TitlePageIndicator;
 import org.json.JSONArray;
@@ -26,8 +31,10 @@ import java.util.List;
 
 public class ViewPagerFragment extends Fragment {
     private SharedPreferences sharedPreferences;
+    private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
+    private static final int CHANGE_IMAGE_BACKGROUND_REQUEST_CODE = 101;
     ViewPager viewPager;
-    Fragment fragment;
+    private ImageButton btnSetting;
     TitlePageIndicator titlePageIndicator;
     RoomInFloorAdapter roomInFloorAdapter;
     public static final String DATA_LIGHT = "DATA_LIGHT";
@@ -44,7 +51,7 @@ public class ViewPagerFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         sharedPreferences = getActivity().getSharedPreferences(DATA_LIGHT, 0);
-
+        btnSetting = (ImageButton)getView().findViewById(R.id.btnSettings);
         viewPager = (ViewPager)getView().findViewById(R.id.vpager);
         titlePageIndicator = (TitlePageIndicator)getView().findViewById(R.id.titleIndicator);
         currentFloor = 0;
@@ -93,16 +100,68 @@ public class ViewPagerFragment extends Fragment {
                 }
             }
         });
-        viewPager.setOnTouchListener(swipeDetector);
-        if (swipeDetector.getAction() == SwipeDetect.Action.BT) {
-            Toast.makeText(getActivity(),"BT",1000).show();
-            Log.i("Room", "Swipe Detect Right to Left");
+        if(btnSetting.equals(null)||btnSetting==null)
+        {
+            Log.i("RoomFragment","No button");
+        }
+        btnSetting.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("RoomFragment","Check click button");
+                final Dialog dialog = new Dialog(getActivity());
+                Log.i("RoomFragment","Check click button");
+                // Include dialog.xml file
+                dialog.setContentView(R.layout.dialog_setting);
+                // Set dialog title
+                dialog.setTitle("More Option");
+                TextView txtCamera = (TextView) dialog.findViewById(R.id.txtCamera);
+                TextView txtGallery = (TextView) dialog.findViewById(R.id.txtGallery);
+                TextView txtDefault = (TextView) dialog.findViewById(R.id.txtDefault);
 
-        }
-        if (swipeDetector.getAction() == SwipeDetect.Action.TB) {
-            Toast.makeText(getActivity(),"TB",1000).show();
-            Log.i("Room", "Swipe Detect Left to Right");
-        }
+                txtCamera.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Intent intentCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                        RoomInFloorAdapter roomInFloorAdapter = (RoomInFloorAdapter) viewPager.getAdapter();
+                        Log.i("RoomFragment","Check current fragment : "+roomInFloorAdapter.getFloor());
+                        Log.i("RoomFragment","Check current fragment : "+viewPager.getCurrentItem());
+
+                        if (intentCamera.resolveActivity(getActivity().getPackageManager()) != null) {
+                            startActivityForResult(intentCamera, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
+                        }
+                        dialog.dismiss();
+
+                    }
+                });
+
+                txtGallery.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+
+                        RoomInFloorAdapter roomInFloorAdapter = (RoomInFloorAdapter) viewPager.getAdapter();
+                        Log.i("RoomFragment","Check current fragment : "+roomInFloorAdapter.getFloor());
+                        Log.i("RoomFragment","Check current fragment : "+viewPager.getCurrentItem());
+
+                        intent.setType("image/*");
+                        startActivityForResult(intent, CHANGE_IMAGE_BACKGROUND_REQUEST_CODE);
+                    }
+                });
+                txtDefault.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        dialog.dismiss();
+                    }
+                });
+                dialog.show();
+            }
+        });
+        //settouch vp
+        viewPager.setOnTouchListener(swipeDetector);
+
+
     }
 
     //get all name room of floor
