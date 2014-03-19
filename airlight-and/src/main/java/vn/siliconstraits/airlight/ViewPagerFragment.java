@@ -31,8 +31,7 @@ import java.util.List;
 
 public class ViewPagerFragment extends Fragment {
     private SharedPreferences sharedPreferences;
-    private static final int CAMERA_CAPTURE_IMAGE_REQUEST_CODE = 100;
-    private static final int CHANGE_IMAGE_BACKGROUND_REQUEST_CODE = 101;
+
     ViewPager viewPager;
     private ImageButton btnSetting;
     TitlePageIndicator titlePageIndicator;
@@ -62,7 +61,7 @@ public class ViewPagerFragment extends Fragment {
         super.onStart();
         String[] nameroom = getAllNameRoom(0);
         List<Fragment> fragments = setupFragmentInFloor(0);
-        roomInFloorAdapter = new RoomInFloorAdapter(getFragmentManager(), fragments, nameroom,0);
+        roomInFloorAdapter = new RoomInFloorAdapter(getActivity().getSupportFragmentManager(), fragments, nameroom,0);
         viewPager.setAdapter(roomInFloorAdapter);
         titlePageIndicator.setViewPager(viewPager,0);
 
@@ -100,68 +99,16 @@ public class ViewPagerFragment extends Fragment {
                 }
             }
         });
-        if(btnSetting.equals(null)||btnSetting==null)
-        {
-            Log.i("RoomFragment","No button");
-        }
-        btnSetting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Log.i("RoomFragment","Check click button");
-                final Dialog dialog = new Dialog(getActivity());
-                Log.i("RoomFragment","Check click button");
-                // Include dialog.xml file
-                dialog.setContentView(R.layout.dialog_setting);
-                // Set dialog title
-                dialog.setTitle("More Option");
-                TextView txtCamera = (TextView) dialog.findViewById(R.id.txtCamera);
-                TextView txtGallery = (TextView) dialog.findViewById(R.id.txtGallery);
-                TextView txtDefault = (TextView) dialog.findViewById(R.id.txtDefault);
 
-                txtCamera.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        Intent intentCamera = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-                        RoomInFloorAdapter roomInFloorAdapter = (RoomInFloorAdapter) viewPager.getAdapter();
-                        Log.i("RoomFragment","Check current fragment : "+roomInFloorAdapter.getFloor());
-                        Log.i("RoomFragment","Check current fragment : "+viewPager.getCurrentItem());
-
-                        if (intentCamera.resolveActivity(getActivity().getPackageManager()) != null) {
-                            startActivityForResult(intentCamera, CAMERA_CAPTURE_IMAGE_REQUEST_CODE);
-                        }
-                        dialog.dismiss();
-
-                    }
-                });
-
-                txtGallery.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
-                        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-
-                        RoomInFloorAdapter roomInFloorAdapter = (RoomInFloorAdapter) viewPager.getAdapter();
-                        Log.i("RoomFragment","Check current fragment : "+roomInFloorAdapter.getFloor());
-                        Log.i("RoomFragment","Check current fragment : "+viewPager.getCurrentItem());
-
-                        intent.setType("image/*");
-                        startActivityForResult(intent, CHANGE_IMAGE_BACKGROUND_REQUEST_CODE);
-                    }
-                });
-                txtDefault.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        dialog.dismiss();
-                    }
-                });
-                dialog.show();
-            }
-        });
         //settouch vp
         viewPager.setOnTouchListener(swipeDetector);
 
 
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     //get all name room of floor
