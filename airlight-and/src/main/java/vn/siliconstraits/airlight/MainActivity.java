@@ -45,6 +45,8 @@ public class MainActivity extends FragmentActivity {
     ViewPagerFragment viewPagerFragment;
     private FragmentManager mFragmentManager;
 
+    boolean isLoaded = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -59,20 +61,7 @@ public class MainActivity extends FragmentActivity {
         //extract file data
         ExtractData(data);
 
-    }
-
-
-    @Override
-    protected void onDestroy() {
-
-        super.onDestroy();
-        Log.i("RoomFragment", "check MainActivityonDestroy");
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-
+        //On start
         strFloor = getNameFloor();
 
         //get max floor
@@ -120,7 +109,7 @@ public class MainActivity extends FragmentActivity {
                     public void onClick(View view) {
                         dialog.dismiss();
                         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        intent.setType("image/*");
+                        //intent.setType("image*//*");
                         startActivityForResult(intent, CHANGE_IMAGE_BACKGROUND_REQUEST_CODE);
 
                     }
@@ -134,10 +123,40 @@ public class MainActivity extends FragmentActivity {
                 dialog.show();
             }
         });
+        //On resume
+        Log.i("RoomFragment", "MainActivityonResume");
+
+        mFragmentManager = getSupportFragmentManager();
+
+        if (mFragmentManager != null) {
+            Fragment test = mFragmentManager.findFragmentByTag("test");
+            if (test == null)
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new ViewPagerFragment(), "test").commit();
+            else
+                mFragmentManager.beginTransaction().replace(R.id.fragment, test).commit();
+        } else
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new ViewPagerFragment(), "test").commit();
+
+    }
+
+
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+        Log.i("RoomFragment", "check MainActivityonDestroy");
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
         super.onActivityResult(requestCode, resultCode, data);
         try {
             if (requestCode == CAMERA_CAPTURE_IMAGE_REQUEST_CODE) {
@@ -216,18 +235,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     public void onResume() {
         super.onResume();
-        Log.i("RoomFragment", "MainActivityonResume");
 
-        mFragmentManager = getSupportFragmentManager();
-
-        if (mFragmentManager != null) {
-            Fragment test = mFragmentManager.findFragmentByTag("test");
-            if (test == null)
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new ViewPagerFragment(), "test").commit();
-            else
-                mFragmentManager.beginTransaction().replace(R.id.fragment, test).commit();
-        } else
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new ViewPagerFragment(), "test").commit();
     }
 
     @Override
@@ -235,6 +243,7 @@ public class MainActivity extends FragmentActivity {
         super.onPause();
         Log.i("RoomFragment", "MainActivityonPause");
     }
+
 
     @Override
     public void onStop() {
@@ -245,6 +254,7 @@ public class MainActivity extends FragmentActivity {
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putString("message", "Da load roi");
     }
 
     @Override
