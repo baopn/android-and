@@ -13,6 +13,7 @@ import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -31,6 +32,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+
 public class MainActivity extends FragmentActivity {
 
     private LinearLayout linearFloor;
@@ -44,8 +46,7 @@ public class MainActivity extends FragmentActivity {
     SharedPreferences.Editor shareEditor;
     ViewPagerFragment viewPagerFragment;
     private FragmentManager mFragmentManager;
-
-    boolean isLoaded = false;
+    Bundle bundle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +62,7 @@ public class MainActivity extends FragmentActivity {
         //extract file data
         ExtractData(data);
 
-        //On start
+        //On start paste here
         strFloor = getNameFloor();
 
         //get max floor
@@ -123,28 +124,24 @@ public class MainActivity extends FragmentActivity {
                 dialog.show();
             }
         });
-        //On resume
-        Log.i("RoomFragment", "MainActivityonResume");
 
-        mFragmentManager = getSupportFragmentManager();
+        //On resume paste here
+         try{
+            mFragmentManager = getSupportFragmentManager();
 
-        if (mFragmentManager != null) {
-            Fragment test = mFragmentManager.findFragmentByTag("test");
-            if (test == null)
+            if (mFragmentManager != null) {
+                Fragment test = mFragmentManager.findFragmentByTag("test");
+                if (test == null)
+                    getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new ViewPagerFragment(), "test").commit();
+                else
+                    mFragmentManager.beginTransaction().replace(R.id.fragment, test).commit();
+            } else
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new ViewPagerFragment(), "test").commit();
-            else
-                mFragmentManager.beginTransaction().replace(R.id.fragment, test).commit();
-        } else
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment, new ViewPagerFragment(), "test").commit();
-
-    }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
 
 
-    @Override
-    protected void onDestroy() {
-
-        super.onDestroy();
-        Log.i("RoomFragment", "check MainActivityonDestroy");
     }
 
     @Override
@@ -240,6 +237,7 @@ public class MainActivity extends FragmentActivity {
 
     @Override
     public void onPause() {
+
         super.onPause();
         Log.i("RoomFragment", "MainActivityonPause");
     }
@@ -252,9 +250,15 @@ public class MainActivity extends FragmentActivity {
     }
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i("RoomFragment", "check MainActivityonDestroy");
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("message", "Da load roi");
+        outState.clear();
     }
 
     @Override
